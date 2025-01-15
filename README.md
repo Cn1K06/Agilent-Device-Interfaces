@@ -1,5 +1,5 @@
 # Description
-This repository contains Python scripts for remote controll of Agilent measurement devices.
+This repository contains Python scripts for the remote control of Agilent measurement devices.
 
 It is designed to work with Raspberry Pi and Ubuntu, allowing seamless communication with measurement devices via USB or LAN Cable.
 
