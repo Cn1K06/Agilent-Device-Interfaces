@@ -54,7 +54,7 @@ try:
             dmm.handle_frequency_measurement()
     measurement_thread = None
     while True:
-        command = input("Enter command (DC/AC/CURR_DC/CURR_AC/RES/CAP/TEMP/FREQ/CALIBRATE/STOP): ").strip().upper()
+        command = input("Enter command (DC/AC/CURR_DC/CURR_AC/RES/CAP/TEMP/FREQ/CALIBRATE/STOP/EXIT): ").strip().upper()
         
         if command in ["DC", "AC", "CURR_DC", "CURR_AC", "RES", "CAP", "TEMP", "FREQ"]:
             if measurement_thread is None or not measurement_thread.is_alive():
