@@ -1,0 +1,51 @@
+# before interface is initialized, mess device should be connected with a lan cable and opened!!
+
+# lan connection can be checked by commanding in terminal as:
+ping 172.17.2.21 
+
+
+# The file path containing the Python file must be opened in the terminal.
+
+# then to start the interface, command in terminal :
+sudo python3 interface_telnet.py
+
+# if the number of readings will be used then use 2nd python file
+# since the code should be arranged with respect to number of readings.
+sudo python3 interface_telnet2.py
+
+
+# it will automatically start interface
+# initially identity is declared, status cleared and instrument resetted.
+# it is asked if calibration should be performed or not
+# if yes then select a type of calibration.
+# all calibration time is about 16 Min, DC is for 3 Min, AC is for 3 Min, and OHM is for 12 Min.
+
+# After calibration is done, there is no more connection between mess device and raspberry pi
+# so exit the interface and the lan cable should be unplug and plug again.
+# Start interface  by commanding in terminal again:
+sudo python3 interface_telnet.py
+
+# then for the calibration question, it should be commanded as no then
+# measurements can be done by writing one of the commands:  dc, ac, curr_dc, etc 
+# they are listed after python file initialized.
+
+# measuruments can be stopped while measuring by writing command 
+stop
+
+# then it will be asked to save the measurement or not 
+# if it is yes, measurements are saved, file name and format should be written together to save the measurement data. For example:
+dc_voltage.txt
+# Measurument is saved with respect to UTC time and measurument type.
+# For Instance:
+Time,AC Voltage
+2024-08-16 13:37:00 - +1.02527093E-02
+2024-08-16 13:37:01 - +1.70704649E-05
+2024-08-16 13:37:03 - +4.17994131E-06
+2024-08-16 13:37:04 - +5.21056405E-06
+2024-08-16 13:37:05 - +5.03549386E-06
+
+# if answer is no, measurement will not be saved.
+
+# interface could be exited by writing command
+exit
+

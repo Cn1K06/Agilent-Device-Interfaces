@@ -1,0 +1,52 @@
+# ==> means comment
+without # ==> means command in terminal
+
+# Mess device should be connected via usb to the Raspberry pi and with a cable to the oscilloscope
+# The file path containing the Python file must be opened in the terminal.
+# then to start the interface, command on terminal :
+sudo python3 interface.py
+
+# it will automatically start interface
+# initially identity is declared, status cleared and instrument resetted. 
+
+# After the Python file is started, the user is asked which signal will be generated.
+# measurements can be done by writing one of the commands: 
+SIN/SQUARE/RAMP/PULSE/NOISE/ARB/MODULATION/SWEEP/BURST 
+
+# If sin wave is selected, then it is asked to user:
+enter frequency (Hz): 
+
+# then 
+enter amplitude (Vpp) :
+
+# then interface prints in terminal:
+sin wave configured.
+output enabled.
+
+# For other waves the following information are requested from user
+# for a Square wave; frequency,amplitude, duty cycle 
+# for a Ramp wave; freqeuncy, amplitude, symmtery 
+# for a Pulse wave; frequency, amplitude, pulse width, edge time
+# for a Noise ; amplitude
+# for a Arbitrary wave ; frequecy, amplitude, arbitrary waveform points
+# for a Sweep; start frequency, stop frequency,sweep time, sweep type
+# for a burst; carrier frequency, carrier amplitude, number of cycles per burst, burst period, trigger source
+
+# If modulation is to be made, the question is what type of modulation will be made.
+AM/FM/PM/FSK/PWM
+
+# Then, their features should be given also in terminal for example for Amplitude Modulation
+carrier waveform (SIN/SQUARE/RAMP)
+modulating waveform (SIN/SQUARE/RAMP/TRIANGLE/NRAMP)
+carrier frequency
+carrier amplitude
+modulating frequency
+depth
+
+# each one is asked one by one
+# PWM requires only pulse carrier waveform. So user doesn't choose a carrier waveform. It is automatically selected.
+# FSK has no modulating waveform. If FSK is selected, it is not asked modulating waveform.
+
+# interface could be exited by writing command
+exit
+
