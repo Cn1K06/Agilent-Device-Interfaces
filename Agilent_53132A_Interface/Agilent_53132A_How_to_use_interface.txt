@@ -1,0 +1,34 @@
+# Agilent 53132A measurement device should be connected via lan cable to the Raspberry pi and can be connected via a cable to the Agilent 3320A  
+# Agilent 53132A GPIB code should be at 22. It can be arranged in front panel menu via Utility menu.
+
+# The file path containing the Python file must be opened in the terminal.
+# then to start the interface, command on terminal :
+sudo python3 interface.py
+
+
+# The file path containing the Python file must be opened in the terminal
+# then to start the interface, command in terminal :
+
+sudo python3 interface_telnet.py
+
+# it will automatically start interface
+# initially identity is declared, status cleared and instrument resetted
+
+# Measurement types are listed after python file initialized. (FREQ/PER/DCYC/PWID/NWID/RTIM/FTIM/RATIO/CONFIGURATE/LIST/MATH/EXIT) 
+# They can be done by writing one of these commands:   etc. Assumed here: FREQ
+FREQ
+# here it is asked which channel is cable plugged in. Whatever cable is connected to should be selected. Assume channel 1:
+1
+# Then, it is asked what type of measurement mode, single/continuous. Assume:
+continuous
+# press Control + C to stop measurement. Then, it is asked to user whether retrive statistics yes/no:
+yes
+# type of statistics (mean/stddev/min/max):
+mean
+
+# However statistics operations cannot be executed here.
+# Also, the operations in the math menu cannot be performed remotely. Code should be updated or these operations can be performed from the front panel. 
+
+
+# interface could be exited by commanding in terminal:
+exit
