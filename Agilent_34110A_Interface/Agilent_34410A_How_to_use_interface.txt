@@ -1,0 +1,38 @@
+# before interface is initialized, mess device should be connected with usb cable and opened!!
+
+# usb connection can be checked by commanding in terminal as:
+lsusb
+# then it will show the usb connected devices.
+# if usb tools are not installed in ubuntu, it can be installed as:
+sudo apt install usbutils 
+
+# The file path containing the Python file must be opened in the terminal
+# then to start the interface, command in terminal :
+sudo python3 interface.py
+
+# it will automatically start interface
+# initially identity is declared, status cleared and instrument resetted
+
+# Measurement types are listed after python file initialized. 
+# They can be done by writing one of the commands:  dc, ac, curr_dc, etc. Assumed here:
+dc
+# measuruments can be stopped while measuring by writing command 
+stop
+
+# then it will be asked to save the measurement or not 
+# if it is yes, measurements are saved, file name and format should be written together to save the measurement data. for example;
+dc_voltage.txt
+# Measurument is saved with respect to UTC time and measurument type.
+# For Instance:
+Time,AC Voltage
+2024-08-16 13:37:00 - +1.02527093E-02
+2024-08-16 13:37:01 - +1.70704649E-05
+2024-08-16 13:37:03 - +4.17994131E-06
+2024-08-16 13:37:04 - +5.21056405E-06
+2024-08-16 13:37:05 - +5.03549386E-06
+
+# if answer is no, measurement will not be saved.
+
+# interface could be exited by writing command
+exit
+
