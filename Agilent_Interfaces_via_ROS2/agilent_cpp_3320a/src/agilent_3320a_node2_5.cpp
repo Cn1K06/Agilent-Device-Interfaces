@@ -1,0 +1,183 @@
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <unistd.h>
+#include <cstdlib> // For using system()
+#include <algorithm> // For std::transform
+#include <chrono>
+
+class Agilent3320ANode : public rclcpp::Node {
+public:
+  Agilent3320ANode() : Node("agilent_3320a_node") {
+    set_permissions(); // Set USBTMC permissions
+    publisher_ = this->create_publisher<std_msgs::msg::String>("waveform_settings", 10);
+
+    // First, learn the device's identity
+    identity_ = send_command("*IDN?");
+    RCLCPP_INFO(this->get_logger(), "Device Identity: '%s'", identity_.c_str());
+
+    // Reset and clear status
+    reset_device();
+
+    clear_status();
+
+    // Prompt user for waveform type
+    prompt_user();
+  }
+
+private:
+  const std::string usbtmc_device = "/dev/usbtmc1"; // Device file path
+  std::string identity_; // Device identity storage
+
+  void set_permissions() {
+    std::string command = "sudo chmod 666 " + usbtmc_device;
+    int ret = system(command.c_str());
+    if (ret == 0) {
+      RCLCPP_INFO(this->get_logger(), "Permissions set for %s", usbtmc_device.c_str());
+    } else {
+      RCLCPP_ERROR(this->get_logger(), "Failed to set permissions for %s", usbtmc_device.c_str());
+    }
+  }
+
+  std::string send_command(const std::string &command, bool read_response = true, int timeout_ms = 1000) {
+    std::ofstream device_out(usbtmc_device, std::ios::out | std::ios::trunc);
+    if (!device_out.is_open()) {
+      return "Error: Cannot open USBTMC device for writing";
+    }
+    device_out << command << std::endl;
+    device_out.flush();
+    device_out.close();
+
+    if (!read_response) {
+      return "Command Sent";
+    }
+
+    auto start = std::chrono::steady_clock::now();
+    std::ifstream device_in;
+    std::string response;
+    while (std::chrono::steady_clock::now() - start < std::chrono::milliseconds(timeout_ms)) {
+      device_in.open(usbtmc_device, std::ios::in);
+      if (device_in.is_open()) {
+        std::getline(device_in, response);
+        device_in.close();
+        if (!response.empty()) {
+          return response;
+        }
+      }
+      usleep(100000); // 100ms wait
+    }
+    return "Timeout";
+  }
+
+  void reset_device() {
+    send_command("*RST", false);
+    usleep(2000000);
+    RCLCPP_INFO(this->get_logger(), "Instrument reset.");
+  }
+
+  void clear_status() {
+    send_command("*CLS", false);
+    usleep(2000000);
+    RCLCPP_INFO(this->get_logger(), "Status clear.");
+  }
+
+  void wait_for_operation_complete() {
+    std::string response = send_command("*OPC?");
+    RCLCPP_INFO(this->get_logger(), "Operation Complete: %s", response.c_str());
+  }
+
+  void check_device_status() {
+    std::string response = send_command("SYST:ERR?");
+    RCLCPP_INFO(this->get_logger(), "Device Status: %s", response.c_str());
+  }
+
+  void set_sine_wave() {
+    send_command("APPL:SIN 1000,5,0", false);
+    wait_for_operation_complete();
+    check_device_status();
+  }
+
+  void set_square_wave() {
+    send_command("APPL:SQU 2000,5,0", false);
+    wait_for_operation_complete();
+    check_device_status();
+  }
+
+  void set_ramp_wave() {
+    send_command("APPL:RAMP 500,5,0", false);
+    wait_for_operation_complete();
+    check_device_status();
+  }
+
+  void set_pulse_wave() {
+    send_command("APPL:PULS 3000,5,0", false);
+    wait_for_operation_complete();
+    check_device_status();
+  }
+
+  void set_noise_wave() {
+    send_command("APPL:NOIS DEF,5,2", false);
+    wait_for_operation_complete();
+    check_device_status();
+  }
+
+  void configure_arbitrary_wave() {
+    send_command("FUNC ARB", false);
+    send_command("FREQ 1000", false);
+    send_command("VOLT 1", false);
+    send_command("DATA:ARB 0,0.5,1,0.5,0,-0.5,-1,-0.5", false);
+    wait_for_operation_complete();
+    check_device_status();
+  }
+  void prompt_user() {
+    std::string input;
+    while (true) {
+      RCLCPP_INFO(this->get_logger(), "Enter waveform type (SIN/SQU/RAMP/PULS/NOIS/ARB/EXIT):");
+      std::getline(std::cin, input);
+      std::transform(input.begin(), input.end(), input.begin(), ::toupper);
+
+      if (input == "EXIT") {
+        RCLCPP_INFO(this->get_logger(), "Exiting...");
+        rclcpp::shutdown();
+        break;
+      } else {
+        configure_waveform(input);
+      }
+    }
+  }
+
+  void configure_waveform(const std::string &waveform_type) {
+    if (waveform_type == "SIN") {
+      set_sine_wave();
+    } else if (waveform_type == "SQU") {
+      set_square_wave();
+    } else if (waveform_type == "RAMP") {
+      set_ramp_wave();
+    } else if (waveform_type == "PULS") {
+      set_pulse_wave();
+    } else if (waveform_type == "NOIS") {
+      set_noise_wave();
+    } else if (waveform_type == "ARB") {
+      configure_arbitrary_wave();
+    } else {
+      RCLCPP_WARN(this->get_logger(), "Unknown waveform type: '%s'", waveform_type.c_str());
+    }
+
+    auto message = std_msgs::msg::String();
+    message.data = "Waveform Settings: Type=" + waveform_type;
+    RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
+    publisher_->publish(message);
+  }
+
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+};
+
+int main(int argc, char **argv) {
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<Agilent3320ANode>();
+  rclcpp::spin(node);
+  rclcpp::shutdown();
+  return 0;
+}
