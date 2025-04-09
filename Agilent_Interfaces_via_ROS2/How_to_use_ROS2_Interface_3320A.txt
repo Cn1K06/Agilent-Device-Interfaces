@@ -1,0 +1,40 @@
+########### How to use ROS2 Interface of Agilent 3320A measurement device #############
+# If colcon build is already done, it is no needed to be done again.
+
+# if not; These operations should be done in terminal and in workspace environment (that means it should be written in terminal as ubuntu@ubuntu-desktop:~/agilent_3320a_ws).
+colcon build 
+
+# then.
+source install/setup.bash
+
+# now we can run our node in terminal.
+ros2 run agilent_3320a_interface agilent_3320a_node6
+
+# node prints identity of the measurement device, instrument reset and clear status and  then asks user what type of wave should be created.
+# user can select sin, square, ramp, pulse etc. Assumed here ramp is selected.
+ramp
+
+# then node asks user frequency, amplitude and symmetry to create ramp wave
+enter frequency (Hz): 
+
+# then 
+enter amplitude (Vpp) :
+
+#after that
+Enter symmetry (0-100%):
+
+
+# for each type of wave, requirements are different
+# for a Sin Wave; frequency and amplitude
+# for a Square wave; frequency,amplitude and duty cycle 
+# for a Ramp wave; frequency, amplitude and symmetry 
+# for a Pulse wave; frequency, amplitude, pulse width and edge time
+# for a Noise ; amplitude
+# for a Arbitrary wave ; frequency, amplitude and arbitrary waveform points
+# for a Sweep; start frequency, stop frequency,sweep time and sweep type
+# for a burst; carrier frequency, carrier amplitude, number of cycles per burst, burst period and  trigger source
+
+# Node can be exited by commanding exit in terminal
+exit
+
+
