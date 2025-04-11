@@ -1,40 +1,40 @@
-########### How to use ROS2 Interface of Agilent 3320A measurement device #############
-# If colcon build is already done, it is no needed to be done again.
+########### How to Use the ROS 2 Interface of the Agilent 33220A Measurement Device ###########
 
-# if not; These operations should be done in terminal and in workspace environment (that means it should be written in terminal as ubuntu@ubuntu-desktop:~/agilent_3320a_ws).
-colcon build 
+# If 'colcon build' has already been run, it does not need to be executed again.
 
-# then.
-source install/setup.bash
+# If not, the following operations should be done in the terminal, inside the workspace environment
+# (e.g., the prompt should look like: ubuntu@ubuntu-desktop:~/agilent_3320a_ws)
 
-# now we can run our node in terminal.
-ros2 run agilent_3320a_interface agilent_3320a_node6
+colcon build  
 
-# node prints identity of the measurement device, instrument reset and clear status and  then asks user what type of wave should be created.
-# user can select sin, square, ramp, pulse etc. Assumed here ramp is selected.
-ramp
+# Then:
+source install/setup.bash  
 
-# then node asks user frequency, amplitude and symmetry to create ramp wave
-enter frequency (Hz): 
+# Now, you can run the node using the following command:
+ros2 run agilent_3320a_interface agilent_3320a_node6  
 
-# then 
-enter amplitude (Vpp) :
+# The node prints the identity of the measurement device, resets the instrument,
+# clears its status, and then asks the user what type of waveform should be created.
 
-#after that
-Enter symmetry (0-100%):
+# The user can select from various waveform types: sin, square, ramp, pulse, etc.
+# Assume "ramp" is selected:
+ramp  
 
+# The node will then ask for the required parameters:
+Enter frequency (Hz):  
+Enter amplitude (Vpp):  
+Enter symmetry (0–100%):  
 
-# for each type of wave, requirements are different
-# for a Sin Wave; frequency and amplitude
-# for a Square wave; frequency,amplitude and duty cycle 
-# for a Ramp wave; frequency, amplitude and symmetry 
-# for a Pulse wave; frequency, amplitude, pulse width and edge time
-# for a Noise ; amplitude
-# for a Arbitrary wave ; frequency, amplitude and arbitrary waveform points
-# for a Sweep; start frequency, stop frequency,sweep time and sweep type
-# for a burst; carrier frequency, carrier amplitude, number of cycles per burst, burst period and  trigger source
+# Required parameters vary depending on the waveform type:
 
-# Node can be exited by commanding exit in terminal
-exit
+# For a Sine wave: frequency, amplitude  
+# For a Square wave: frequency, amplitude, duty cycle  
+# For a Ramp wave: frequency, amplitude, symmetry  
+# For a Pulse wave: frequency, amplitude, pulse width, edge time  
+# For Noise: amplitude  
+# For an Arbitrary wave: frequency, amplitude, arbitrary waveform points  
+# For a Sweep: start frequency, stop frequency, sweep time, sweep type  
+# For a Burst: carrier frequency, carrier amplitude, number of cycles per burst, burst period, trigger source  
 
-
+# The node can be exited by typing the following command in the terminal:
+exit  
