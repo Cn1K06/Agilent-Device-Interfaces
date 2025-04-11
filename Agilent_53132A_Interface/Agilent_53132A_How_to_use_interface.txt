@@ -1,34 +1,46 @@
-# Agilent 53132A measurement device should be connected via lan cable to the Raspberry pi and can be connected via a cable to the Agilent 3320A  
-# Agilent 53132A GPIB code should be at 22. It can be arranged in front panel menu via Utility menu.
+# ==> means comment  
+# Without # ==> means command in terminal  
 
-# The file path containing the Python file must be opened in the terminal.
-# then to start the interface, command on terminal :
-sudo python3 interface.py
+# The Agilent 53132A measurement device should be connected via LAN cable to the Raspberry Pi.  
+# Optionally, it can also be connected via a cable to the Agilent 33220A.  
 
+# The GPIB address of the Agilent 53132A must be set to 22.  
+# This can be configured from the front panel via the Utility menu.  
 
-# The file path containing the Python file must be opened in the terminal
-# then to start the interface, command in terminal :
+# The terminal must be opened in the directory containing the Python file.  
 
-sudo python3 interface_telnet.py
+# Then, to start the interface, enter the following command in the terminal:  
+sudo python3 interface.py  
 
-# it will automatically start interface
-# initially identity is declared, status cleared and instrument resetted
+# Or, alternatively (if using telnet-based communication):  
+sudo python3 interface_telnet.py  
 
-# Measurement types are listed after python file initialized. (FREQ/PER/DCYC/PWID/NWID/RTIM/FTIM/RATIO/CONFIGURATE/LIST/MATH/EXIT) 
-# They can be done by writing one of these commands:   etc. Assumed here: FREQ
-FREQ
-# here it is asked which channel is cable plugged in. Whatever cable is connected to should be selected. Assume channel 1:
-1
-# Then, it is asked what type of measurement mode, single/continuous. Assume:
-continuous
-# press Control + C to stop measurement. Then, it is asked to user whether retrive statistics yes/no:
-yes
-# type of statistics (mean/stddev/min/max):
-mean
+# This will automatically start the interface.  
+# Initially, the device identity is queried, the status is cleared, and the instrument is reset.  
 
-# However statistics operations cannot be executed here.
-# Also, the operations in the math menu cannot be performed remotely. Code should be updated or these operations can be performed from the front panel. 
+# After initialization, the available measurement types are listed:  
+# (FREQ / PER / DCYC / PWID / NWID / RTIM / FTIM / RATIO / CONFIGURATE / LIST / MATH / EXIT)  
+# A measurement can be started by entering one of these commands. For example:  
+FREQ  
 
+# Then, the interface asks which channel the cable is connected to.  
+# Enter the channel number (e.g., if the cable is connected to channel 1):  
+1  
 
-# interface could be exited by commanding in terminal:
-exit
+# Next, the measurement mode is requested: single or continuous. For example:  
+continuous  
+
+# To stop the measurement, press **Control + C**.  
+# After stopping, the user is asked whether to retrieve statistics:  
+yes  
+
+# Then, the desired type of statistics is requested (mean / stddev / min / max). For example:  
+mean  
+
+# Note:  
+# Statistical operations cannot currently be executed remotely.  
+# Likewise, the operations in the MATH menu cannot be performed via the interface.  
+# These functionalities must either be added to the code or performed directly via the front panel.  
+
+# The interface can be exited by typing:  
+exit  
