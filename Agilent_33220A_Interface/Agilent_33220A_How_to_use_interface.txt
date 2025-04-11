@@ -1,52 +1,51 @@
-# ==> means comment
-without # ==> means command in terminal
+# ==> means comment  
+# Without # ==> means command in terminal  
 
-# Mess device should be connected via usb to the Raspberry pi and with a cable to the oscilloscope
-# The file path containing the Python file must be opened in the terminal.
-# then to start the interface, command on terminal :
-sudo python3 interface.py
+# The measurement device should be connected via USB to the Raspberry Pi and with a cable to the oscilloscope.  
+# The file path containing the Python file must be opened in the terminal.  
+# Then, to start the interface, enter the following command in the terminal:  
+sudo python3 interface.py  
 
-# it will automatically start interface
-# initially identity is declared, status cleared and instrument resetted. 
+# This will automatically start the interface.  
+# Initially, the identity is queried, the status is cleared, and the instrument is reset.  
 
-# After the Python file is started, the user is asked which signal will be generated.
-# measurements can be done by writing one of the commands: 
-SIN/SQUARE/RAMP/PULSE/NOISE/ARB/MODULATION/SWEEP/BURST 
+# After the Python file is started, the user is asked which signal will be generated.  
+# Measurements can be done by entering one of the following commands:  
+SIN / SQUARE / RAMP / PULSE / NOISE / ARB / MODULATION / SWEEP / BURST  
 
-# If sin wave is selected, then it is asked to user:
-enter frequency (Hz): 
+# If a sine wave is selected, the user is asked:  
+Enter frequency (Hz):  
 
-# then 
-enter amplitude (Vpp) :
+# Then:  
+Enter amplitude (Vpp):  
 
-# then interface prints in terminal:
-sin wave configured.
-output enabled.
+# The interface then prints in the terminal:  
+Sine wave configured.  
+Output enabled.  
 
-# For other waves the following information are requested from user
-# for a Square wave; frequency,amplitude, duty cycle 
-# for a Ramp wave; freqeuncy, amplitude, symmtery 
-# for a Pulse wave; frequency, amplitude, pulse width, edge time
-# for a Noise ; amplitude
-# for a Arbitrary wave ; frequecy, amplitude, arbitrary waveform points
-# for a Sweep; start frequency, stop frequency,sweep time, sweep type
-# for a burst; carrier frequency, carrier amplitude, number of cycles per burst, burst period, trigger source
+# For other waveforms, the following information is requested from the user:  
+# For a square wave: frequency, amplitude, duty cycle  
+# For a ramp wave: frequency, amplitude, symmetry  
+# For a pulse wave: frequency, amplitude, pulse width, edge time  
+# For noise: amplitude  
+# For an arbitrary wave: frequency, amplitude, arbitrary waveform points  
+# For a sweep: start frequency, stop frequency, sweep time, sweep type  
+# For a burst: carrier frequency, carrier amplitude, number of cycles per burst, burst period, trigger source  
 
-# If modulation is to be made, the question is what type of modulation will be made.
-AM/FM/PM/FSK/PWM
+# If modulation is selected, the user is asked which type of modulation is to be used:  
+AM / FM / PM / FSK / PWM  
 
-# Then, their features should be given also in terminal for example for Amplitude Modulation
-carrier waveform (SIN/SQUARE/RAMP)
-modulating waveform (SIN/SQUARE/RAMP/TRIANGLE/NRAMP)
-carrier frequency
-carrier amplitude
-modulating frequency
-depth
+# Then, the corresponding parameters are requested via the terminal. For example, for amplitude modulation:  
+Carrier waveform (SIN / SQUARE / RAMP)  
+Modulating waveform (SIN / SQUARE / RAMP / TRIANGLE / NRAMP)  
+Carrier frequency  
+Carrier amplitude  
+Modulating frequency  
+Depth  
 
-# each one is asked one by one
-# PWM requires only pulse carrier waveform. So user doesn't choose a carrier waveform. It is automatically selected.
-# FSK has no modulating waveform. If FSK is selected, it is not asked modulating waveform.
+# Each parameter is asked one by one.  
+# PWM requires only a pulse carrier waveform, so the user does not select a carrier waveform. It is automatically chosen.  
+# FSK does not have a modulating waveform. If FSK is selected, the modulating waveform is not requested.  
 
-# interface could be exited by writing command
+# The interface can be exited by typing the following command:  
 exit
-
