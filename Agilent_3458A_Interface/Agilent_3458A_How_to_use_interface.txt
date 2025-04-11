@@ -1,51 +1,53 @@
-# before interface is initialized, mess device should be connected with a lan cable and opened!!
+# ==> means comment  
+# Without # ==> means command in terminal  
 
-# lan connection can be checked by commanding in terminal as:
-ping 172.17.2.21 
+# Before the interface is initialized, the measurement device should be connected with a LAN cable and powered on!
 
+# The LAN connection can be checked by entering the following command in the terminal:  
+ping 172.17.2.21  
 
-# The file path containing the Python file must be opened in the terminal.
+# The terminal must be opened in the directory containing the Python file.  
 
-# then to start the interface, command in terminal :
-sudo python3 interface_telnet.py
+# Then, to start the interface, enter the following command in the terminal:  
+sudo python3 interface_telnet.py  
 
-# if the number of readings will be used then use 2nd python file
-# since the code should be arranged with respect to number of readings.
-sudo python3 interface_telnet2.py
+# If a fixed number of readings is required, use the second Python file,  
+# as the code is configured to handle a specific number of readings:  
+sudo python3 interface_telnet2.py  
 
+# This will automatically start the interface.  
+# Initially, the device identity is queried, the status is cleared, and the instrument is reset.  
+# The user is then asked whether a calibration should be performed.  
+# If yes, a type of calibration must be selected.  
+# The total calibration time is approximately 16 minutes:  
+# DC takes about 3 minutes, AC takes about 3 minutes, and OHM takes about 12 minutes.  
 
-# it will automatically start interface
-# initially identity is declared, status cleared and instrument resetted.
-# it is asked if calibration should be performed or not
-# if yes then select a type of calibration.
-# all calibration time is about 16 Min, DC is for 3 Min, AC is for 3 Min, and OHM is for 12 Min.
+# After calibration is completed, the connection between the measurement device and the Raspberry Pi is lost.  
+# Therefore, the interface should be exited, and the LAN cable should be unplugged and plugged back in.  
+# Then, restart the interface by entering the following command:  
+sudo python3 interface_telnet.py  
 
-# After calibration is done, there is no more connection between mess device and raspberry pi
-# so exit the interface and the lan cable should be unplug and plug again.
-# Start interface  by commanding in terminal again:
-sudo python3 interface_telnet.py
+# When asked about calibration, respond with "no" to proceed to measurements.  
+# Measurements can then be started by entering one of the commands, such as: dc, ac, curr_dc, etc.  
+# These commands are listed after the Python file is initialized.  
 
-# then for the calibration question, it should be commanded as no then
-# measurements can be done by writing one of the commands:  dc, ac, curr_dc, etc 
-# they are listed after python file initialized.
+# Measurements can be stopped at any time by typing the command:  
+stop  
 
-# measuruments can be stopped while measuring by writing command 
-stop
+# The user will then be asked whether to save the measurement.  
+# If the answer is yes, the filename and format must be entered (e.g.):  
+ac_voltage.txt  
 
-# then it will be asked to save the measurement or not 
-# if it is yes, measurements are saved, file name and format should be written together to save the measurement data. For example:
-dc_voltage.txt
-# Measurument is saved with respect to UTC time and measurument type.
-# For Instance:
-Time,AC Voltage
-2024-08-16 13:37:00 - +1.02527093E-02
-2024-08-16 13:37:01 - +1.70704649E-05
-2024-08-16 13:37:03 - +4.17994131E-06
-2024-08-16 13:37:04 - +5.21056405E-06
-2024-08-16 13:37:05 - +5.03549386E-06
+# The measurement is saved with respect to UTC time and the selected measurement type.  
+# For example:  
+Time,AC Voltage  
+2024-08-16 13:37:00 - +1.02527093E-02  
+2024-08-16 13:37:01 - +1.70704649E-05  
+2024-08-16 13:37:03 - +4.17994131E-06  
+2024-08-16 13:37:04 - +5.21056405E-06  
+2024-08-16 13:37:05 - +5.03549386E-06  
 
-# if answer is no, measurement will not be saved.
+# If the answer is no, the measurement will not be saved.  
 
-# interface could be exited by writing command
-exit
-
+# The interface can be exited by typing:  
+exit  
