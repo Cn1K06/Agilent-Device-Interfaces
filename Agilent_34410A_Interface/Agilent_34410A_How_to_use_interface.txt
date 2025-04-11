@@ -1,38 +1,42 @@
-# before interface is initialized, mess device should be connected with usb cable and opened!!
+# ==> means comment  
+# Without # ==> means command in terminal  
 
-# usb connection can be checked by commanding in terminal as:
-lsusb
-# then it will show the usb connected devices.
-# if usb tools are not installed in ubuntu, it can be installed as:
-sudo apt install usbutils 
+# Before the interface is initialized, the measurement device should be connected via USB and powered on!
 
-# The file path containing the Python file must be opened in the terminal
-# then to start the interface, command in terminal :
-sudo python3 interface.py
+# The USB connection can be checked by entering the following command in the terminal:  
+lsusb  
+# This will display the connected USB devices.  
+# If the USB tools are not installed on Ubuntu, they can be installed with:  
+sudo apt install usbutils  
 
-# it will automatically start interface
-# initially identity is declared, status cleared and instrument resetted
+# The terminal must be opened in the directory containing the Python file.  
+# Then, to start the interface, run the following command:  
+sudo python3 interface.py  
 
-# Measurement types are listed after python file initialized. 
-# They can be done by writing one of the commands:  dc, ac, curr_dc, etc. Assumed here:
-dc
-# measuruments can be stopped while measuring by writing command 
-stop
+# This will automatically start the interface.  
+# Initially, the device identity is queried, the status is cleared, and the instrument is reset.  
 
-# then it will be asked to save the measurement or not 
-# if it is yes, measurements are saved, file name and format should be written together to save the measurement data. for example;
-dc_voltage.txt
-# Measurument is saved with respect to UTC time and measurument type.
-# For Instance:
-Time,AC Voltage
-2024-08-16 13:37:00 - +1.02527093E-02
-2024-08-16 13:37:01 - +1.70704649E-05
-2024-08-16 13:37:03 - +4.17994131E-06
-2024-08-16 13:37:04 - +5.21056405E-06
-2024-08-16 13:37:05 - +5.03549386E-06
+# After the Python file is initialized, available measurement types are listed.  
+# A measurement can be started by entering one of the commands, such as:  
+ac  
 
-# if answer is no, measurement will not be saved.
+# Measurements can be stopped at any time by typing the command:  
+stop  
 
-# interface could be exited by writing command
-exit
+# The interface will then ask whether to save the measurement.  
+# If the answer is yes, the user must enter the filename and format (e.g.,):  
+ac_voltage.txt  
 
+# The measurement is saved with respect to UTC time and the selected measurement type.  
+# For example:  
+Time,AC Voltage  
+2024-08-16 13:37:00 - +1.02527093E-02  
+2024-08-16 13:37:01 - +1.70704649E-05  
+2024-08-16 13:37:03 - +4.17994131E-06  
+2024-08-16 13:37:04 - +5.21056405E-06  
+2024-08-16 13:37:05 - +5.03549386E-06  
+
+# If the answer is no, the measurement will not be saved.  
+
+# The interface can be exited by typing:  
+exit  
