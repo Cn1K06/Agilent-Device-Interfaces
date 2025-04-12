@@ -1,21 +1,34 @@
 ########### How to use ROS2 Interface of Agilent 34410A measurement device #############
 # If colcon build is already done, it is no needed to be done again.
-# if not; These operations should be done in terminal and in workspace environment (that means it should be written in terminal as ubuntu@ubuntu-desktop:~/ros2_ws).
-colcon build --packages-select agilent_cpp_34410a
+
+# if not; These operations should be done in terminal and in workspace environment (that means it should be written in terminal as ubuntu@ubuntu-desktop:~/agilent_34410a_ws).
+colcon build 
+
 # then.
 source install/setup.bash
+
 # now we can run our node in terminal.
-ros2 run agilent_cpp_34410a agilent_34410a_node4
-# node prints identity of the measurement device and asks user what type of measurement should be done.
-# user can select dc, ac, curr_dc etc. Assumed here dc is selected.
+ros2 run agilent_34410a_interface agilent_34410a_node6
+
+# node prints identity of the measurement device, instrument reset and clear status and  then asks user what type of measurement should be done.
+
+# user can select dc, ac, curr_dc, curr_ac, res, cap etc. Assumed here dc is selected.
 dc
+
 # then node start to print dc voltage, it can be stopped by commanding stop in terminal.
 stop
+
 # then node asks to user whether measurements are saved or not.
 yes
-# if answer is no they are not saved.  If yes, then first filename is written by user .
+
+# if answer is "no", the measurements are not saved.  If yes, then first filename is written by user.
 dc_voltage
-# then file format is written .
+
+# then file format is written.
 txt
-# after that measurements are saved in ros workspace in a file.
+
+# after that measurements are saved in ros2 workspace in a file.
+
+# Node can be exited by commanding exit in terminal
+exit
 
