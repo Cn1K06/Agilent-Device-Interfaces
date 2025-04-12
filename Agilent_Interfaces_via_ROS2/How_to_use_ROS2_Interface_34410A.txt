@@ -1,34 +1,40 @@
-########### How to use ROS2 Interface of Agilent 34410A measurement device #############
-# If colcon build is already done, it is no needed to be done again.
+########### How to Use the ROS 2 Interface of the Agilent 34410A Measurement Device ###########
 
-# if not; These operations should be done in terminal and in workspace environment (that means it should be written in terminal as ubuntu@ubuntu-desktop:~/agilent_34410a_ws).
-colcon build 
+# If 'colcon build' has already been completed, there is no need to run it again.
 
-# then.
-source install/setup.bash
+# If not, the following operations should be performed in the terminal within the workspace environment  
+# (e.g., the terminal should display something like: ubuntu@ubuntu-desktop:~/agilent_34410a_ws)
 
-# now we can run our node in terminal.
-ros2 run agilent_34410a_interface agilent_34410a_node6
+colcon build  
 
-# node prints identity of the measurement device, instrument reset and clear status and  then asks user what type of measurement should be done.
+# Then:
+source install/setup.bash  
 
-# user can select dc, ac, curr_dc, curr_ac, res, cap etc. Assumed here dc is selected.
-dc
+# Now you can run the node with the following command:
+ros2 run agilent_34410a_interface agilent_34410a_node6  
 
-# then node start to print dc voltage, it can be stopped by commanding stop in terminal.
-stop
+# The node prints the identity of the measurement device, resets the instrument, clears its status,  
+# and then asks the user what type of measurement should be performed.
 
-# then node asks to user whether measurements are saved or not.
-yes
+# The user can select from several options: dc, ac, curr_dc, curr_ac, res, cap, etc.  
+# Assume "dc" is selected:
+dc  
 
-# if answer is "no", the measurements are not saved.  If yes, then first filename is written by user.
-dc_voltage
+# The node will then begin printing DC voltage readings.  
+# The measurement can be stopped by typing the following command in the terminal:
+stop  
 
-# then file format is written.
-txt
+# After stopping, the node asks whether the measurements should be saved:
+yes  
 
-# after that measurements are saved in ros2 workspace in a file.
+# If the answer is "no", the measurements will not be saved.  
+# If the answer is "yes", the user is prompted to enter a filename:
+dc_voltage  
 
-# Node can be exited by commanding exit in terminal
-exit
+# Then, the user is asked to specify the file format:
+txt  
 
+# The measurements are then saved in a file inside the ROS 2 workspace.
+
+# The node can be exited by typing the following command in the terminal:
+exit  
