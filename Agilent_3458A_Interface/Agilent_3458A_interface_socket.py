@@ -34,7 +34,7 @@ try:
 
     # Now continue to measurements
     while True:
-        command = input("Enter command (DC/AC/CURR_DC/CURR_AC/RES/TEMP/FREQ/STOP/EXIT): ").strip().upper()
+        command = input("Enter command (DC/AC/CURR_DC/CURR_AC/RES/FREQ/STOP/EXIT): ").strip().upper()
 
         if command in ["DC", "AC", "CURR_DC", "CURR_AC", "RES", "FREQ"]:
             if command == "DC":
