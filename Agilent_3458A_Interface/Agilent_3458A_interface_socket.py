@@ -1,71 +1,79 @@
 import time
+import threading
 from Agilent_3458A_commands_socket import DMMCommands
 
-# Set IP and Port for the Agilent 3458A via Prologix adapter
 ip_address = '172.17.2.21'
 port = 1234
-
-measurement_frequency = 1  # Frequency of measurement can be changed here
+measurement_frequency = 1
 
 try:
-    # Initialize the DMMCommands object with socket communication
     dmm = DMMCommands(ip_address, port, measurement_frequency)
 
-    # Print instrument identity
     print(f"Instrument identity: {dmm.get_identity()}")
     time.sleep(1)
 
-    # Clear the instrument status
     dmm.clear_status()
     print("Status cleared")
     time.sleep(1)
 
-    # Reset the instrument
     dmm.reset()
     print("Instrument reset")
     time.sleep(1)
 
-    # Ask whether calibration should be performed
     perform_calibration = input("Do you want to perform calibration? (yes/no): ").strip().lower()
-
     if perform_calibration == "yes":
         calib_type = input("Enter the type of calibration (ALL/DCV/AC/OHMS): ").strip().upper()
         dmm.calibrate(calib_type)
 
-    # Now continue to measurements
+    auto_zero_choice = input("Enable auto zero before measurement? (yes/no): ").strip().lower()
+    dmm.enable_auto_zero(auto_zero_choice == "yes")
+
+    def start_measurement(command):
+        if command == "DC":
+            dmm.handle_dc_voltage_measurement()
+        elif command == "AC":
+            dmm.handle_ac_voltage_measurement()
+        elif command == "CURR_DC":
+            dmm.handle_dc_current_measurement()
+        elif command == "CURR_AC":
+            dmm.handle_ac_current_measurement()
+        elif command == "RES":
+            dmm.handle_resistance_measurement()
+        elif command == "FREQ":
+            dmm.handle_frequency_measurement()
+
+    measurement_thread = None
+
     while True:
         command = input("Enter command (DC/AC/CURR_DC/CURR_AC/RES/FREQ/STOP/EXIT): ").strip().upper()
-
         if command in ["DC", "AC", "CURR_DC", "CURR_AC", "RES", "FREQ"]:
-            if command == "DC":
-                dmm.handle_dc_voltage_measurement()
-            elif command == "AC":
-                dmm.handle_ac_voltage_measurement()
-            elif command == "CURR_DC":
-                dmm.handle_dc_current_measurement()
-            elif command == "CURR_AC":
-                dmm.handle_ac_current_measurement()
-            elif command == "RES":
-                dmm.handle_resistance_measurement()
-            elif command == "FREQ":
-                dmm.handle_frequency_measurement()
-
-        elif command == "STOP":
-            dmm.stop_measurement()
-            print("Measurement stopped.")
-            save = input("Do you want to save the measurements? (yes/no): ").strip().lower()
-            if save == "yes":
-                filename = input("Enter filename (e.g., measurements.txt): ").strip()
-                dmm.save_measurements(filename)
+            if measurement_thread is None or not measurement_thread.is_alive():
+                measurement_thread = threading.Thread(target=start_measurement, args=(command,))
+                measurement_thread.start()
             else:
-                print("Measurements not saved.")
+                print("Measurement is already running. Please stop it before starting a new one.")
+        elif command == "STOP":
+            if measurement_thread and measurement_thread.is_alive():
+                dmm.stop_measurement()
+                measurement_thread.join()
+                print("Measurement stopped.")
 
+                save = input("Do you want to save the measurements? (yes/no): ").strip().lower()
+                if save == "yes":
+                    filename = input("Enter filename (e.g., dc_voltage.txt): ").strip()
+                    dmm.save_measurements(filename)
+                else:
+                    print("Measurements not saved.")
+            else:
+                print("No measurement is currently running.")
         elif command == "EXIT":
             print("Exiting the program.")
+            if measurement_thread and measurement_thread.is_alive():
+                dmm.stop_measurement()
+                measurement_thread.join()
             break
-
         else:
-            print("Invalid command. Please enter a valid command (DC/AC/CURR_DC/CURR_AC/RES/CAP/TEMP/FREQ/STOP/EXIT).")
+            print("Invalid command.")
 
 except Exception as e:
     print(f"Could not communicate with the device: {e}")
