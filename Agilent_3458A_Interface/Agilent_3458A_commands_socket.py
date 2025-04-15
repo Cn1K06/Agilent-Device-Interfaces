@@ -15,13 +15,26 @@ class DMMCommands:
 
     def _send_command(self, command):
         try:
-            self.sock.sendall(f"{command}\n".encode('ascii'))  # Send the command
+            self.sock.sendall(f"{command}\n".encode('ascii'))
         except (socket.error, socket.timeout):
             print("Connection lost, attempting to reconnect...")
-            self.sock.connect((self.ip_address, self.port))  # Reconnect if necessary
-            self.sock.sendall(f"{command}\n".encode('ascii'))  # Retry sending the command
+            self.sock.connect((self.ip_address, self.port))
+            self.sock.sendall(f"{command}\n".encode('ascii'))
+
+    def _clear_buffer(self):
+        try:
+            self.sock.setblocking(0)
+            while True:
+                data = self.sock.recv(1024)
+                if not data:
+                    break
+        except BlockingIOError:
+            pass
+        finally:
+            self.sock.setblocking(1)
 
     def _query(self, command):
+        self._clear_buffer()
         self._send_command(command)
         return self.sock.recv(1024).decode('ascii').strip()
 
@@ -32,7 +45,7 @@ class DMMCommands:
         self._send_command('RESET')
 
     def clear_status(self):
-        self._send_command('*CLS')  # Clear the instrument status
+        self._send_command('*CLS')
 
     def configure_dc_voltage(self):
         self._send_command('DCV AUTO')
@@ -54,100 +67,105 @@ class DMMCommands:
 
     def measure_dc_voltage(self):
         self.configure_dc_voltage()
-        return self._query('TARM SGL, DCV?')
+        self._send_command('TARM SGL')
+        time.sleep(0.1)
+        return self._query('DCV?')
 
     def measure_ac_voltage(self):
         self.configure_ac_voltage()
-        return self._query('TARM SGL, ACV?')
+        self._send_command('TARM SGL')
+        time.sleep(0.1)
+        return self._query('ACV?')
 
     def measure_dc_current(self):
         self.configure_dc_current()
-        return self._query('TARM SGL, DCI?')
+        self._send_command('TARM SGL')
+        time.sleep(0.1)
+        return self._query('DCI?')
 
     def measure_ac_current(self):
         self.configure_ac_current()
-        return self._query('TARM SGL, ACI?')
+        self._send_command('TARM SGL')
+        time.sleep(0.1)
+        return self._query('ACI?')
 
     def measure_resistance(self):
         self.configure_resistance()
-        return self._query('TARM SGL, OHMF?')
+        self._send_command('TARM SGL')
+        time.sleep(0.1)
+        return self._query('OHMF?')
 
     def measure_frequency(self):
         self.configure_frequency()
-        return self._query('TARM SGL, FREQ?')
+        self._send_command('TARM SGL')
+        time.sleep(0.1)
+        return self._query('FREQ?')
 
-    def stop_measurement(self):
-        self._stop_event.set()
+    def enable_auto_zero(self, enable=True):
+        self._send_command('AZERO ON' if enable else 'AZERO OFF')
+        print(f"Auto zero {'enabled' if enable else 'disabled'}.")
 
     def calibrate(self, measurement_type):
         print(f"Starting calibration for {measurement_type}...")
         if measurement_type == "DCV":
-            print("Performing DC voltage calibration (~3 minutes)...")
-            self._send_command('ACAL 1')  # Perform DC voltage calibration
-            time.sleep(3 * 60)  # Wait 3 minutes for calibration
+            self._send_command('ACAL 1')
+            time.sleep(3 * 60)
         elif measurement_type == "AC":
-            print("Performing AC voltage calibration (~3 minutes)...")
-            self._send_command('ACAL 2')  # Perform AC voltage calibration
-            time.sleep(3 * 60)  # Wait 3 minutes for calibration
+            self._send_command('ACAL 2')
+            time.sleep(3 * 60)
         elif measurement_type == "OHMS":
-            print("Performing resistance calibration (~12 minutes)...")
-            self._send_command('ACAL 4')  # Perform resistance calibration
-            time.sleep(12 * 60)  # Wait 12 minutes for calibration
+            self._send_command('ACAL 4')
+            time.sleep(12 * 60)
         elif measurement_type == "ALL":
-            print("Performing full calibration (~16 minutes)...")
-            self._send_command('ACAL 0')  # Perform full calibration
-            time.sleep(16 * 60)  # Wait 16 minutes for calibration
+            self._send_command('ACAL 0')
+            time.sleep(16 * 60)
         else:
             print("Invalid measurement type for calibration.")
-            return
 
     def handle_dc_voltage_measurement(self):
         self._stop_event.clear()
         self.measurement_type = "DC Voltage"
-        print("Configured for DC voltage measurement")
         self._perform_measurement(self.measure_dc_voltage, "Voltage")
 
     def handle_ac_voltage_measurement(self):
         self._stop_event.clear()
         self.measurement_type = "AC Voltage"
-        print("Configured for AC voltage measurement")
         self._perform_measurement(self.measure_ac_voltage, "Voltage")
 
     def handle_dc_current_measurement(self):
         self._stop_event.clear()
         self.measurement_type = "DC Current"
-        print("Configured for DC current measurement")
         self._perform_measurement(self.measure_dc_current, "Current")
 
     def handle_ac_current_measurement(self):
         self._stop_event.clear()
         self.measurement_type = "AC Current"
-        print("Configured for AC current measurement")
         self._perform_measurement(self.measure_ac_current, "Current")
 
     def handle_resistance_measurement(self):
         self._stop_event.clear()
         self.measurement_type = "Resistance"
-        print("Configured for resistance measurement")
         self._perform_measurement(self.measure_resistance, "Resistance")
 
     def handle_frequency_measurement(self):
         self._stop_event.clear()
         self.measurement_type = "Frequency"
-        print("Configured for frequency measurement")
         self._perform_measurement(self.measure_frequency, "Frequency")
 
     def _perform_measurement(self, measure_func, data_label):
-        self._measurement_data = []  # Clear previous measurement data
+        self._measurement_data = []
         try:
             while not self._stop_event.is_set():
                 measurement = measure_func()
                 timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
                 self._measurement_data.append((timestamp, measurement))
-                print(f"{timestamp} - {data_label}: {measurement}")
+                print(f"{timestamp} - {data_label}: {measurement.strip()}")
                 time.sleep(self.measurement_frequency)
         except KeyboardInterrupt:
             print(f"{data_label} measurement stopped by user.")
+
+    def stop_measurement(self):
+        self._stop_event.set()
 
     def save_measurements(self, filename):
         measurement_type = self.measurement_type if self.measurement_type else "Measurement"
