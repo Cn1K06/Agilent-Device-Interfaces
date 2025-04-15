@@ -64,4 +64,5 @@ Documentation is provided under each How to use ROS2 Interface and includes:
 
 - USB or LAN cable for connection  
 - Raspberry Pi (recommended model: 4B)  
-- Ubuntu 22.04.5 LTS (Jammy Jellyfish)  
+- Ubuntu 22.04.5 LTS (Jammy Jellyfish) for Python3 Interfaces
+- Ubuntu 24.04 LTS (Jazzy) for ROS2 Interfaces (C++)
