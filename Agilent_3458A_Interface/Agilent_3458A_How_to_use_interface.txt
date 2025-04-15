@@ -54,4 +54,6 @@ Time,AC Voltage
 # The interface can be exited by typing:  
 exit  
 
-#If you want to perform a specific number of measurements (e.g., 10), you can use interface_telnet2.py. This interface functions similarly to the original version, but it allows the user to define the number of measurements in advance and then executes the measurements accordingly.
+#If you want to perform a specific number of measurements (e.g., 10), 
+# you can use interface_telnet2.py. This interface functions similarly to the original version, 
+# but it allows the user to define the number of measurements in advance and then executes the measurements accordingly.
