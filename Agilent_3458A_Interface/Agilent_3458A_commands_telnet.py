@@ -3,11 +3,12 @@ import time
 import threading
 
 class DMMCommands:
-    def __init__(self, telnet_connection):
+    def __init__(self, telnet_connection, measurement_frequency=1):
         self.telnet = telnet_connection
         self._stop_event = threading.Event()
         self._measurement_data = []
         self.measurement_type = None
+        self.measurement_frequency = measurement_frequency
 
     def send_command(self, command):
         """Send a command via Telnet and return the response."""
@@ -79,7 +80,7 @@ class DMMCommands:
         """Measure Frequency."""
         self.configure_frequency()
         return self.send_command('TARM SGL, FREQ?')
-        
+
     def enable_auto_zero(self, enable=True):
         """Enable or disable auto zero feature."""
         if enable:
@@ -110,21 +111,19 @@ class DMMCommands:
             print("Invalid measurement type for calibration.")
             return
 
-    def _perform_measurement(self, measure_func, data_label, num_readings, stop_flag):
-        """Perform the measurement for the specified number of readings."""
+    def _perform_measurement(self, measure_func, data_label, stop_flag):
+        """Perform the continuous measurement until stopped."""
         self._measurement_data = []  # Clear previous measurement data
         try:
-            for i in range(num_readings):
-                if stop_flag.is_set():  # Stop if the stop flag is set
-                    break
+            while not stop_flag.is_set():  # Check if the stop flag is set
                 measurement = measure_func()
                 timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
                 self._measurement_data.append((timestamp, measurement))
-                print(f"{timestamp} - {data_label} Reading {i+1}: {measurement}")
-                time.sleep(0.5)  # Small delay between readings for device processing
+                print(f"{timestamp} - {data_label}: {measurement}")
+                time.sleep(self.measurement_frequency)  # Control measurement frequency
         except KeyboardInterrupt:
             print(f"{data_label} measurement stopped by user.")
-            
+
     def save_measurements(self, filename):
         # Use the measurement type set during the measurement process
         measurement_type = self.measurement_type if self.measurement_type else "Measurement"
