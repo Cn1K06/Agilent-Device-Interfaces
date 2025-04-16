@@ -1,5 +1,5 @@
 # Description
-This repository contains Python **and C++** scripts for the remote control of Agilent measurement devices.  
+This repository contains **Python and C++** scripts for the remote control of Agilent measurement devices.  
 It is designed to work with **Raspberry Pi** and **Ubuntu**, allowing seamless communication with measurement devices via **USB** or **LAN cable**.
 
 It also includes **ROS 2 interfaces (C++)** for integrating Agilent devices into robotic systems and automated workflows.
