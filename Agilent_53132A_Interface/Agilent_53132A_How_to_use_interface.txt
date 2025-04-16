@@ -3,6 +3,8 @@
 
 # The Agilent 53132A measurement device should be connected via LAN cable to the Raspberry Pi.  
 # Optionally, it can also be connected via a cable to the Agilent 33220A.  
+# If the interface is used on Ubuntu 24.04, run the following command in the terminal before using the interface (or if there is an error about "No route to Host/Device").
+sudo ip addr add 172.17.2.100/24 dev eth0
 
 # The GPIB address of the Agilent 53132A must be set to 22.  
 # This can be configured from the front panel via the Utility menu.  
