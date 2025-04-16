@@ -1,0 +1,44 @@
+########### How to use ROS2 Interface of Agilent 3485A measurement device #############
+# command in terminal after device is connected with lan cable. if lan cable is unpluged it should be commanded again in terminal.
+sudo ip addr add 172.17.2.100/24 dev eth0
+
+# If colcon build is already done, it is no needed to be done again.
+
+# if not; These operations should be done in terminal and in workspace environment (that means it should be written in terminal as ubuntu@ubuntu-desktop:~/agilent_3485a_ws).
+colcon build 
+
+# then.
+source install/setup.bash
+
+# now we can run our node in terminal.
+ros2 run agilent_3485a_interface agilent_3485a_node7
+
+# node prints identity of the measurement device, instrument reset and clear status and  then asks user whether calibration is performed or not. If yes, then terminal prints;
+Enter the type of calibration (ALL/DCV/AC/OHMS):
+# ALL lasts ~16 mins
+# dcv  lasts ~ 3 mins
+# AC lasts ~3 mins
+# OHMS lats ~12 mins
+
+# Then it is asked to user for auto zero function should be enabled or not.
+Enable auto zero before measurement? (yes/no) (applies only to DC voltage, DC current, and resistance) :
+# if yes, then
+Internal offset errors will be nulled.
+
+# Then what type of measurement should be done. User can select dc, ac, curr_dc, curr_ac, res, freq. Assumed here dc is selected.
+dc
+
+# then node start to print dc voltage, it can be stopped by commanding stop in terminal.
+stop
+
+# then node asks to user whether measurements are saved or not.
+yes
+
+# if answer is "no", the measurements are not saved.  If yes, then  filename and format are written together by user.
+dc_voltage.txt
+
+# after that measurements are saved in ros2 workspace in a file.
+
+# Node can be exited by commanding exit in terminal
+exit
+
