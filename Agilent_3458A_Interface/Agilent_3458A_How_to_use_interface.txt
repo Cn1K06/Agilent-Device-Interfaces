@@ -1,7 +1,6 @@
 # ==> means comment  
 # Without # ==> means command in terminal  
-# If the interface is used on Ubuntu 24.04, run the following command in the terminal before using the interface.
-sudo ip addr add 172.17.2.100/24 dev eth0
+# If the interface is used on Ubuntu 24.04, run the following command in the terminal before using the interface (or if there is an error about "No route to Host/Device").
 
 # Before the interface is initialized, the measurement device should be connected with a LAN cable and powered on!
 
