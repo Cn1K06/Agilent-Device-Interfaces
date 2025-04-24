@@ -11,7 +11,7 @@ sudo apt install usbutils
 
 # The terminal must be opened in the directory containing the Python file.  
 # Then, to start the interface, run the following command:  
-sudo python3 interface.py  
+sudo python3 Agilent_34110A_interface.py  
 
 # This will automatically start the interface.  
 # Initially, the device identity is queried, the status is cleared, and the instrument is reset.  

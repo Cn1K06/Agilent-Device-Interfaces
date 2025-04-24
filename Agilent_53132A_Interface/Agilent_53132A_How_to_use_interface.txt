@@ -12,10 +12,7 @@ sudo ip addr add 172.17.2.100/24 dev eth0
 # The terminal must be opened in the directory containing the Python file.  
 
 # Then, to start the interface, enter the following command in the terminal:  
-sudo python3 interface.py  
-
-# Or, alternatively (if using telnet-based communication):  
-sudo python3 interface_telnet.py  
+sudo python3 Agilent_53132A_interface.py  
 
 # This will automatically start the interface.  
 # Initially, the device identity is queried, the status is cleared, and the instrument is reset.  
